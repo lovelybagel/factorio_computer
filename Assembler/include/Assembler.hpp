@@ -2,14 +2,14 @@
 #define ASSEMBLER_HPP
 
 #include <cstdint>
-#include <ifstream>
+#include <fstream>
 #include <string>
 #include <unordered_map>
 #include <vector>
 
 namespace nb_factorio {
 
-typedef bytecode std::vector<int32_t>;
+typedef std::vector<int32_t> bytecode;
 
 class Assembler
 {
@@ -23,7 +23,7 @@ private:
         uint32_t address;
         uint8_t  opcode;
     };
-    typedef instruction_list std::vector<instruction>;
+    typedef std::vector<instruction> instruction_list;
 
 private:
     void parse_labels(std::ifstream& file);
