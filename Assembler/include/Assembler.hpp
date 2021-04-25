@@ -26,6 +26,8 @@ private:
     typedef std::vector<instruction> instruction_list;
 
 private:
+    void reset_position(std::ifstream& file);
+    void parse_variables(std::ifstream& file);
     void parse_labels(std::ifstream& file);
     void parse_instructions(std::ifstream& file);
     void convert_instructions();
@@ -38,7 +40,7 @@ private:
         {"LD",  18}, {"ST",  19}, {"STA", 20}, {"JMP", 21}, {"JZ",  22}, {"PSH", 23},
         {"POP", 24}, {"HLT", 63}
     };
-    std::unordered_map<std::string, uint16_t> labels;
+    std::unordered_map<std::string, uint32_t> labels;
     instruction_list instructions;
     bytecode result;
 };
