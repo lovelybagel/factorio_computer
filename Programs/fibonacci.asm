@@ -1,15 +1,21 @@
-ST  1   513
-ST  1   770
+var a
+var b
+var c
+peripheral top_display 769
+peripheral low_display 770
+entry
+ST  1   a
+ST  1   low_display
 top
-LD  0   513
-ADD 0   514
-ST  0   515
-LD  0   514
-ST  0   513
-LD  0   515
-ST  0   514
-LD  0   513
-ST  0   769
-LD  0   514
-ST  0   770
+LD  0   a
+ADD 0   b
+ST  0   c
+LD  0   b
+ST  0   a
+LD  0   c
+ST  0   b
+LD  0   a
+ST  0   top_display
+LD  0   b
+ST  0   low_display
 JMP top 0

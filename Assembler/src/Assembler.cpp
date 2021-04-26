@@ -17,7 +17,7 @@ void Assembler::assemble(string& file_name)
     if (!file.is_open()) {
         cerr << "Failed to open: " << file_name << '\n';
     } else {
-        parse_variables(file);
+        parse_directives(file);
         parse_labels(file);
         parse_instructions(file);
         file.close();
@@ -27,41 +27,53 @@ void Assembler::assemble(string& file_name)
 
 bytecode Assembler::get_result() {   return result; }
 
-void Assembler::reset_position(ifstream& file)
+void Assembler::parse_directives(ifstream& file)
 {
-    file.seekg(0, ios_base::beg);
+    labels.clear();
     string token;
-    file >> token;
-    while (token != "entry") {
-        file.ignore(numeric_limits<streamsize>::max(), '\n');
+    uint32_t line_number{1};
+    do {
+        line_number++;
         file >> token;
-    }
-    file.ignore(numeric_limits<streamsize>::max(), '\n');
-}
-
-void Assembler::parse_variables(ifstream& file)
-{
-    string token;
-    file >> token;
-    while (token != "entry") {
-        if (!keywords.contains(token)) {
-            uint32_t address;
-            file >> address;
-            labels.insert(make_pair(token, address));
+        if (directives.contains(token)) {
+            switch (directives.at(token)) {
+            case directive::entry: {
+                break;
+            }
+            case directive::var: {
+                file >> token;
+                labels.insert(make_pair(token, variable_address++));
+                break;
+            }
+            case directive::ram_start: {
+                file >> ram_start;
+                variable_address = ram_start;
+                break;
+            }
+            case directive::peripheral: {
+                uint32_t peripheral_address;
+                file >> token;
+                file >> peripheral_address;
+                labels.insert(make_pair(token, peripheral_address));
+                break;
+            }
+            } // switch(directives.at(token))
+        } else {
+            file.ignore(numeric_limits<streamsize>::max(), '\n');
         }
-        file >> token;
-    }
+    } while (token != "entry");
 }
 
 void Assembler::parse_labels(ifstream& file)
 {
-    reset_position(file);
+    file.seekg(0, ios_base::beg);
     string token;
-    labels.clear();
     for (uint32_t line_number = 1; !file.eof(); line_number++) {    
         file >> token;
         if (!keywords.contains(token)) {
             labels.insert(make_pair(token, line_number--));
+        } else if (directives.contains(token)) {
+            line_number--;
         }
         file.ignore(numeric_limits<streamsize>::max(), '\n');
     }
@@ -69,7 +81,7 @@ void Assembler::parse_labels(ifstream& file)
 
 void Assembler::parse_instructions(ifstream& file)
 {
-    reset_position(file);
+    file.seekg(0, ios_base::beg);
     instructions.clear();
     string token;
     while (!file.eof()) {
