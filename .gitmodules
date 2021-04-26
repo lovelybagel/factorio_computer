@@ -1,0 +1,3 @@
+[submodule "factorio-blueprint-decoder"]
+	path = factorio-blueprint-decoder
+	url = https://github.com/asheiduk/factorio-blueprint-decoder.git
