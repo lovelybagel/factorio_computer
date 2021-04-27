@@ -1,5 +1,5 @@
-#ifndef ASSEMBLER_HPP
-#define ASSEMBLER_HPP
+#ifndef NB_ASSEMBLER_HPP
+#define NB_ASSEMBLER_HPP
 
 #include <cstdint>
 #include <fstream>
@@ -17,6 +17,7 @@ public:
     Assembler();
     void assemble(std::string& file_name);
     bytecode get_result();
+    void make_bp_json(std::string& file_name);
 private:
     struct instruction {
         uint32_t immediate;
@@ -52,6 +53,12 @@ private:
     std::unordered_map<std::string, uint32_t> labels;
     instruction_list instructions;
     bytecode result;
+    std::string program_name;
+
+private:
+    void emit_head(std::ofstream& file);
+    void emit_middle(std::ofstream& file);
+    void emit_end(std::ofstream& file);
 };
 
 } // namespace nb_factorio

@@ -7,15 +7,13 @@ using namespace nb_factorio;
 
 int main(int argc, char* argv[])
 {
-    if (argc != 2) {
-        std::cout << "Usage: factorio_asm filename\n";
+    if (argc != 3) {
+        std::cout << "Usage: factorio_asm input_file output_file\n";
         exit(EXIT_FAILURE);
     }
-
-    std::string filename = argv[1];
+    std::string in_file = argv[1];
+    std::string out_file = argv[2];
     Assembler a;
-    a.assemble(filename);
-    for (auto instruction : a.get_result()) {
-        std::cout << instruction << '\n';
-    }
-} 
+    a.assemble(in_file);
+    a.make_bp_json(out_file);
+}
